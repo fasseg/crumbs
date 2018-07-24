@@ -1,5 +1,5 @@
 CC=gcc
-CFLAGS=-I. -g
+CFLAGS=-I. -g -Werror -Wall
 DEPS=crumbs.h
 TARGET=target
 BUILD=build
@@ -19,4 +19,4 @@ clean:
 	rm -Rf $(TARGET)
 
 install:
-	install -m 755 -o root crumbs /usr/local/bin/
+	install -m 755 -o root $(TARGET)/crumbs /usr/local/bin/
