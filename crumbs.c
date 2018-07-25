@@ -307,7 +307,7 @@ int exec(const char *name) {
 
     // read the command and execute it on the system
     char *cmd = read_command(name);
-    printf("Executing %s...\n", cmd);
+    printf("Executing %s\n", cmd);
     int ret = system(cmd);
     return ret;
 }
