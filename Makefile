@@ -20,3 +20,4 @@ clean:
 
 install:
 	install -m 755 -o root $(TARGET)/crumbs /usr/local/bin/
+	install -m 755 -o root crumbs.conf /etc/crumbs.conf
