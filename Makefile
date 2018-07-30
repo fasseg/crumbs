@@ -24,5 +24,5 @@ clean:
 install:
 	install -m 755 -o root $(TARGET)/crumbs /usr/local/bin/
 	install -m 755 -o root crumbs.conf /etc/crumbs.conf
-	install -m 644 -o root $(TARGET)/crumbs.1 $(MAN)
+	install -m 644 -o root -D $(TARGET)/crumbs.1 $(MAN)
 	install -m 644 -o root -D crumbs-completion.bash /usr/local/share/crumbs/crumbs-completion.bash
