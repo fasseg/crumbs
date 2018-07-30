@@ -1,3 +1,15 @@
+# Crumbs
+
+Crumbs is a command line utility for the shell, for storing commands under a meaningful name in a hierarchy
+
+## Motivation
+
+For web service tests I am used to sending a lot of HTTP Requests via `curl`. The command line invocation can be quite complex and long and I wanted to be able to organize them in a directory like structure. Also I wanted to have a context sensitive auto completion for the different command invocations.
+
+## Why not us aliases?
+
+Aliases do not allow a user to use foward slashes in the alias name in order to create complex hierarchies and therefore no context sensitive auto completion.
+
 ## Installation
 
 ### Prerequisites
@@ -23,6 +35,15 @@ make
 ```bash
 sudo make install
 ```
+
+### Auto Completion
+
+An auto completion file for the bash shell is included and installed in `/usr/local/share/crumbs/crumbs-completion.bash`. Inm order to enable the completion it can e.g. be added to the user's `.bashrc` file:
+```bash
+echo "source /usr/local/share/crumbs/crumbs-completion.bash" >> ~/.bashrc
+
+```
+
 
 ### Usage
 

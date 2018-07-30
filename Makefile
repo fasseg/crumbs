@@ -11,7 +11,7 @@ MAN=/usr/local/man/man1/crumbs.1
 
 all: crumbs.o 
 	$(CC) $(CFLAGS) -o $(TARGET)/crumbs $(BUILD)/crumbs.o
-	gzip -c $(DOC)/crumbs.man >> $(TARGET)/crumbs.1
+	gzip -c $(DOC)/crumbs.man > $(TARGET)/crumbs.1
 
 directories: 
 	mkdir -p $(TARGET)
@@ -25,3 +25,4 @@ install:
 	install -m 755 -o root $(TARGET)/crumbs /usr/local/bin/
 	install -m 755 -o root crumbs.conf /etc/crumbs.conf
 	install -m 644 -o root $(TARGET)/crumbs.1 $(MAN)
+	install -m 644 -o root -D crumbs-completion.bash /usr/local/share/crumbs/crumbs-completion.bash
