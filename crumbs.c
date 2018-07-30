@@ -282,7 +282,7 @@ char * read_command(const char *name) {
     char *path = calloc(sizeof(char), len);
     strncat(path, config.path, strlen(config.path) + 1);
     strncat(path, "/", 2);
-    strncat(path, name, strlen(path) + 1);
+    strncat(path, name, strlen(name) + 1);
 
     // open the file for reading
     FILE *fp = fopen(path, "r");
