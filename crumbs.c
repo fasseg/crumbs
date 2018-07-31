@@ -37,25 +37,51 @@ int main(int argc, char **argv) {
     // make sure that the data directory for crumbs exists and is usable
     init_data_dir(config.path);
 
+    if (argc < optind + 1) {
+        fprintf(stderr, "ERROR: Action is required\n");
+        exit(EXIT_FAILURE);
+    }
+
     // parse the action requested by the user
     if (strcmp(argv[optind], "insert") == 0) {
-        if (argc != optind + 3) fatal("Invalid number of arguments for insert");
+        if (argc != optind + 3)  {
+            fprintf(stderr, "ERROR: Invalid number of arguments for insert\n");
+            exit(EXIT_FAILURE);
+        }
         insert(argv[optind + 1], argv[optind + 2]);
     } else if (strcmp(argv[optind], "insert-exec") == 0) {
-        if (argc != optind + 3) fatal("Invalid number of argument for insert-exec");
+        if (argc != optind + 3) {
+            fprintf(stderr, "ERROR: Invalid number of argument for insert-exec\n");
+            exit(EXIT_FAILURE);
+        }
         insert_exec(argv[optind + 1], argv[optind + 2]);
     } else if (strcmp(argv[optind], "list") == 0) {
-        if (argc != optind + 1) fatal("Invalid number of argument for list");
+        if (argc != optind + 1) {
+            fprintf(stderr, "ERROR: Invalid number of argument for list\n");
+            exit(EXIT_FAILURE);
+        }
         list(config.path);
     } else if (strcmp(argv[optind], "exec") == 0) {
-        if (argc != optind + 2) fatal("Invalid number of argument for exec");
+        if (argc != optind + 2) {
+            fprintf(stderr, "ERROR: Invalid number of argument for exec\n");
+            exit(EXIT_FAILURE);
+        }
         exec(argv[optind + 1]);
     } else if (strcmp(argv[optind], "show") == 0) {
-        if (argc != optind + 2) fatal("Invalid number of argument for show");
+        if (argc != optind + 2) {
+            fprintf(stderr, "ERROR: Invalid number of argument for show\n");
+            exit(EXIT_FAILURE);
+        }
         view(argv[optind + 1]);
     } else if (strcmp(argv[optind], "delete") == 0) {
-        if (argc != optind + 2) fatal("Invalid number of arguments for delete");
+        if (argc != optind + 2) {
+            fprintf(stderr, "ERROR: Invalid number of arguments for delete\n");
+            exit(EXIT_FAILURE);
+        }
         delete_crumb(argv[optind + 1]);
+    } else {
+        fprintf(stderr, "ERROR: Invalid action '%s'\n", argv[optind]);
+        exit(EXIT_FAILURE);
     }
 }
 
@@ -68,25 +94,25 @@ void init_data_dir(const char *path) {
             printf("Initializing data directory %s\n", path);
             if (mkdir(path, S_IRUSR | S_IWUSR | S_IXUSR) == -1) {
                 perror("Unable to create directory");
-                exit(1);
+                exit(EXIT_FAILURE);
             }
         } else {
             perror("Unable to access data directory");
-            exit(1);
+            exit(EXIT_FAILURE);
         }
     }
 
     DIR *dir = opendir(path);
     if (dir == NULL) {
         perror("Unable to access data directory");
-        exit(1);
+        exit(EXIT_FAILURE);
     }
 
     // store a file descritptot for later use in a global variable
     data_dir_fd = dirfd(dir);
     if (data_dir_fd == -1) {
         perror("Unable to access data directory");
-        exit(1);
+        exit(EXIT_FAILURE);
     }
 }
 
@@ -95,8 +121,8 @@ void read_config(char *cfg_path) {
     // read the configuration data from a file
     FILE *fp = fopen(cfg_path, "r");
     if (fp == NULL) {
-        perror("FATAL: Unable to read config:");
-        exit(1);
+        perror("ERROR: Unable to read config:");
+        exit(EXIT_FAILURE);
     }
 
     char *line = NULL;
@@ -133,7 +159,8 @@ void read_config(char *cfg_path) {
 
     // check that the config is valid
     if (config.path == NULL) {
-        fatal("Unable to read path from config file");
+        fprintf(stderr, "ERROR: Unable to read path from config file\n");
+        exit(EXIT_FAILURE);
     }
 
     fclose(fp);
@@ -145,8 +172,8 @@ int insert(const char *name, const char *cmd) {
 
     // Make sure that only relative paths are used
     if (*(name) == '/') {
-        fatal("Name must be a relative path");
-        exit(1);
+        fprintf(stderr, "ERROR: Name can not start with a slash\n");
+        exit(EXIT_FAILURE);
     }
 
     // parse the directories in a path
@@ -287,7 +314,8 @@ char * read_command(const char *name) {
     // open the file for reading
     FILE *fp = fopen(path, "r");
     if (fp == NULL) {
-        fatal("Crumb does not exist");
+        fprintf(stderr, "ERROR: Crumb does not exist\n");
+        exit(EXIT_FAILURE);
     }
     fseek(fp, 0, SEEK_END);
     int num_bytes = ftell(fp);
@@ -449,11 +477,6 @@ int delete_file(char **path_segments, char *file) {
     return 0;
 }
 
-void fatal(const char *msg) {
-    printf("FATAL: %s\n", msg);
-    exit(1);
-}
-
 void check_name(const char *name) {
     size_t len = strlen(name);
     if (len == 0) {
@@ -494,4 +517,5 @@ void show_help(char *progr_name) {
     printf("\tdelete <name>\t\t\tDelete a crumb\n");
     printf("\nOptions:\n");
     printf("\t-h/--help\t\t\tShow this help dialog and exit\n");
+    printf("\t-c/--config <config-file>\tUse a different configuration file\n");
 }

@@ -47,8 +47,3 @@ No known bugs.
 
 .SH AUTHOR
 Frank Asseg (frank.asseg@objecthunter.net)
-
-.SH ORGANIZATION
-FILIADATA Informationssysteme für den Handel GmbH,
-.br
-dm-drogerie markt GmbH + Co. KG

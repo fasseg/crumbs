@@ -39,8 +39,6 @@ int list(const char *path);
 
 void read_config(char *path);
 
-void fatal(const char *msg);
-
 void init_data_dir(const char *path);
 
 void create_dirs(const int len, const char **dirs);
