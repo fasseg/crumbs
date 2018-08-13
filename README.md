@@ -12,16 +12,6 @@ Aliases do not allow a user to use foward slashes in the alias name in order to 
 
 ## Installation
 
-### Prerequisites
-
-In order to compile and install crumbs on your local system you the following software must be available on the system:
-1. [gcc](https://gcc.gnu.org/)
-2. [make](https://www.gnu.org/software/make/)
-3. [gzip](https://www.gnu.org/software/gzip/)
-4. [git](https://git-scm.com/)
-
-### Installation procedure
-
 1. Checkout the sources from github:
 ```bash
 git clone https://github.com/fasseg/crumbs.git
@@ -35,11 +25,12 @@ cd crumbs
 ```bash
 make
 ```
-
 4. Install the binaries and the man pages
 ```bash
 sudo make install
 ```
+
+For a more comprehensive installation documentation check the file INSTALL in the root directory
 
 ### Configuration file
 
