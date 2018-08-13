@@ -43,7 +43,7 @@ The default configuration file is `/etc/crumbs.conf`. It contains the following 
 `path`
 >The path to use for storing data. If the path starts with a forward slash crumbs uses an absolute path to the configuration file. If the path is not starting with a forward slash the current user's home directory is prepended to the path.
 
-you can use a different configuration file by using the `--config option`
+A different configuration file can be used by invoking crumbs with the `--config` option
 ### Auto Completion
 
 An auto completion file for the bash shell is included and installed in `/usr/local/share/crumbs/crumbs-completion.bash`. In order to enable the completion you can copy the file `crumbs-completion.bash` to e.g. `/usr/local/share/crumbs/` and source in your `.bashrc` file:
