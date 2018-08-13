@@ -40,7 +40,8 @@ sudo make install
 
 The default configuration file is `/etc/crumbs.conf`. It contains the following settings:
 
-`path`    The path to use for storing data. If the path starts with a forward slash crumbs uses an absolute path to the configuration file. If the path is not starting with a forward slash the current user's home directory is prepended to the path.
+`path`
+>The path to use for storing data. If the path starts with a forward slash crumbs uses an absolute path to the configuration file. If the path is not starting with a forward slash the current user's home directory is prepended to the path.
 
 ### Auto Completion
 
