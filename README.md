@@ -36,6 +36,11 @@ make
 sudo make install
 ```
 
+### Configuration file
+
+The default configuration file is `/etc/crumbs.conf`. It contains the following settings:
+`path`    The path to use for storing data. If the path starts with a forward slash crumbs uses an absolute path to the configuration file. If the path is not starting with a forward slash the current user's home directory is prepended to the path.
+
 ### Auto Completion
 
 An auto completion file for the bash shell is included and installed in `/usr/local/share/crumbs/crumbs-completion.bash`. In order to enable the completion you can copy the file `crumbs-completion.bash` to e.g. `/usr/local/share/crumbs/` and source in your `.bashrc` file:
@@ -43,7 +48,6 @@ An auto completion file for the bash shell is included and installed in `/usr/lo
 echo "source /usr/local/share/crumbs/crumbs-completion.bash" >> ~/.bashrc
 
 ```
-
 
 ### Usage
 
