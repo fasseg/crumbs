@@ -1,2 +1,8 @@
-target/
-build/
+crumbs
+crumbs.o
+config.log
+config.status
+.deps
+Makefile
+autom4te.cache/
+config.h.in~

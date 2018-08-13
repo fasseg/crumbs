@@ -1,0 +1,6 @@
+2017-08-13 Frank Asseg <frank.asseg@objecthunter.net>
+
+	Version 0.0.1
+
+	* initial release: minimal featureset (insert, show, list, exec,
+	insert-exec, delete)

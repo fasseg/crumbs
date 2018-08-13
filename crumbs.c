@@ -154,15 +154,18 @@ void read_config(char *cfg_path) {
                 if (home == NULL) {
                     home = getpwuid(getuid())->pw_dir;
                 }
-                char *tmp = malloc(strlen(home) + strlen(path) + 2);
-                strncpy(tmp, home, strlen(home));
-                strcpy(tmp + strlen(home), "/");
-                strncpy(tmp + strlen(home) + 1, path, strlen(path) + 1);
-                config.path = tmp;
+                
+                // construct the path for the configuration 
+                size_t len_home = strlen(home);
+                size_t len_path = strlen(path);
+                size_t len_buffer = len_home + len_path + 2;
+                char *buffer = malloc(len_buffer);
+                snprintf(buffer, len_buffer, "%s/%s", home, path);
+                config.path = buffer;
             } else {
                 // handle an absolute path
                 config.path = malloc(strlen(path) + 1);
-                strncpy(config.path, path, len + 1);
+                snprintf(config.path, strlen(path) + 1, "%s", path);
             }
         }
     }
@@ -207,14 +210,13 @@ int insert(const char *name, const char *cmd) {
     create_dirs(dirs_len, dirs);
 
     // create the absolute path of the target file
-    char *abs_path = calloc(len + strlen(config.path) + 2, sizeof(char));
-    strncat(abs_path, config.path, strlen(config.path) + 1);
-    strncat(abs_path, "/", 2);
-    strncat(abs_path, name, len);
+    size_t len_path = len + strlen(config.path) + 2;
+    char *abs_path = malloc(len_path);
+    snprintf(abs_path, len_path,  "%s/%s", config.path, name);
 
     // make sure that no crumb with the same path exists
     int exists = crumb_exists(name);
-    if (exists == ECRUMBEXISTS) {
+    if (exists == CRUMBEXISTS) {
         printf("WARN: The crumb %s already exists. Do you want to overwrite it? [y|N] ", name);
         int choice = getchar();
         if (choice != 'y' && choice != 'Y') {
@@ -242,13 +244,10 @@ int insert(const char *name, const char *cmd) {
 int crumb_exists(const char *name) {
 
     // create a path containing the parent directories
-    size_t len_parent = strlen(config.path);
-    size_t len_name = strlen(name);
-    char path[len_parent + len_name + 2];
-    memset(path, 0, len_parent + len_name + 2);
-    strncat(path, config.path, len_parent);
-    strcat(path, "/");
-    strncat(path, name, len_name);
+    size_t len_path = strlen(config.path) + strlen(name) + 2;
+    char path[len_path];
+    snprintf(path, len_path, "%s/%s", config.path, name);
+    
     struct stat path_stat;
     if (stat(path, &path_stat) < 0) {
         return 0;
@@ -258,7 +257,7 @@ int crumb_exists(const char *name) {
     if (S_ISDIR(path_stat.st_mode)) {
         return EDIREXISTS;
     } else {    
-        return ECRUMBEXISTS;
+        return CRUMBEXISTS;
     }
 }
 
@@ -269,9 +268,9 @@ void create_dirs(const int len, const char **dirs) {
     for (int i = 0; i < len; i++) {
         const char *name = *(dirs + i);
         create_dir(prefix, name);
-        prefix = realloc(prefix, strlen(prefix) + strlen(name) + 2);
-        strncat(prefix, name, strlen(name) + 1);
-        strncat(prefix, "/", 2);
+        size_t len_prefix = strlen(prefix) + strlen(name) + 2;
+        prefix = realloc(prefix, len_prefix);
+        snprintf(prefix, len_prefix, "%s%s/", prefix, name);
     }    
     free(prefix);
 }
@@ -281,9 +280,9 @@ void create_dir(const char *prefix, const char *name) {
     // create a path for creating the directory
     int len_prefix = strlen(prefix);
     int len_name = strlen(name);
-    char *path = calloc(len_prefix + len_name + 2, sizeof(char));
-    strncat(path, prefix, len_prefix + 1);
-    strncat(path, name, len_name + 1);
+    size_t len_path = strlen(prefix) + strlen(name) + 2;
+    char *path = malloc(len_path);
+    snprintf(path, len_path, "%s%s", prefix, name);
 
     struct stat ds;
 
@@ -309,6 +308,11 @@ void view(const char *name) {
 
     check_name(name);
 
+    if (crumb_exists(name) != CRUMBEXISTS) {
+        fprintf(stderr, "ERROR: The crumb %s does not exist\n", name);
+        exit(EXIT_FAILURE);
+    }
+
     // read and show a command from a stored crumb file
     char *cmd = read_command(name);
     printf("%s\n", cmd);
@@ -318,11 +322,9 @@ void view(const char *name) {
 char * read_command(const char *name) {
 
     // create the path of the crumb file to read the command from
-    int len = strlen(config.path) + strlen(name) + 2;
-    char *path = calloc(sizeof(char), len);
-    strncat(path, config.path, strlen(config.path) + 1);
-    strncat(path, "/", 2);
-    strncat(path, name, strlen(name) + 1);
+    int len_path = strlen(config.path) + strlen(name) + 2;
+    char *path = malloc(len_path);
+    snprintf(path, len_path, "%s/%s", config.path, name);
 
     // open the file for reading
     FILE *fp = fopen(path, "r");
@@ -388,11 +390,9 @@ int list(const char *path) {
                     // recurse in a sub directory and read all crumbs
                     size_t curr_len = strlen(path);
                     size_t sub_len = strlen(ent->d_name);
-                    char *sub = malloc(curr_len + sub_len + 2);
-                    memset(sub, 0, curr_len + sub_len + 2);
-                    strncat(sub, path, curr_len);
-                    strcat(sub, "/");
-                    strncat(sub, ent->d_name, sub_len);
+                    size_t len_sub = strlen(path) + strlen(ent->d_name) + 2;
+                    char *sub = malloc(len_sub);
+                    snprintf(sub, len_sub, "%s/%s", path, ent->d_name);
                     list(sub);
                     free(sub);
                 }             
@@ -406,6 +406,11 @@ int list(const char *path) {
 void delete_crumb(const char *name) {
 
     check_name(name);
+
+    if (crumb_exists(name) != CRUMBEXISTS) {
+        fprintf(stderr, "ERROR: The crumb %s does not exist\n", name);
+        exit(EXIT_FAILURE);
+    }
 
     size_t len = strlen(name);
     size_t offset = 0;
@@ -453,42 +458,38 @@ void delete_crumb(const char *name) {
 }
 
 int delete_file(char **path_segments, char *file) {
+    size_t len_home = strlen(config.path);
+    char *path = malloc(len_home + 2);
     
-    // prepare the path from the configured base directory
-    size_t home_len = strlen(config.path);
-    size_t len = home_len + 1;
-    char *path = malloc(len);
-    strncat(path, config.path, len - 1);
-    strcat(path, "/");
+    // add the parent directory to the path
+    snprintf(path, len_home + 1, "%s", config.path);
 
-    // add all segments to the path
+    // add all the path segments under the parent directory to the path
     for (char **seg = path_segments; *seg; seg++) {
-        size_t seg_len = strlen(*seg);
-        len += seg_len;
-        path = realloc(path, len + 2);
-        strncat(path, *seg, seg_len);
-        strcat(path, "/");
+        path = realloc(path, strlen(path) + strlen(*seg) + 2);
+        snprintf(path + strlen(path), strlen(*seg) + 2, "/%s", *seg);
     }
 
     // add the file name to the path
-    size_t file_len = strlen(file);
-    len += file_len + 1;
-    path=realloc(path, len);
-    strncat(path, file, file_len);
+    path = realloc(path, strlen(path) + strlen(file) + 1);
+    snprintf(path + strlen(path), strlen(file) + 2, "/%s", file);
 
-    // delete the file and all empty directories in the hierarchy
-    while(strlen(path) > home_len) {
+
+    while (strlen(path) > len_home) {
+        // try to remove the file or directory
         if (remove(path) < 0) {
+            // just break out when the directory can not be removed since it might not be empty
             break;
         }
-        if(verbose)
+        
+        if (verbose) 
             printf("Deleting %s\n", path);
+
         char *separator = strrchr(path, '/');
         *separator = '\0';
     }
 
     free(path);
-
     return 0;
 }
 

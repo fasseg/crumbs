@@ -18,7 +18,7 @@
 #define ACTION_LIST 2
 #define ACTION_EXEC 3
 
-#define ECRUMBEXISTS -1
+#define CRUMBEXISTS -1
 #define EDIREXISTS -2
 
 #define DEFAULT_CONFIG "/etc/crumbs.conf"
