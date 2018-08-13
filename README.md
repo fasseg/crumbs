@@ -26,12 +26,17 @@ In order to compile and install crumbs on your local system you the following so
 ```bash
 git clone https://github.com/fasseg/crumbs.git
 ```
-2. Compile the source code
+2. Run the configure script
 ```bash
 cd crumbs
+./configure
+```
+3. Compile the program
+```bash
 make
 ```
-3. Install the binaries and the man pages
+
+4. Install the binaries and the man pages
 ```bash
 sudo make install
 ```
