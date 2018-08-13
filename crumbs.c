@@ -44,6 +44,9 @@ int main(int argc, char **argv) {
     // make sure that the data directory for crumbs exists and is usable
     init_data_dir(config.path);
 
+    if (verbose) 
+        printf("%s v%s\n", PROGRAM_NAME, PROGRAM_VERSION);
+
     if (argc < optind + 1) {
         fprintf(stderr, "ERROR: Action is required\n");
         exit(EXIT_FAILURE);
