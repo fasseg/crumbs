@@ -56,11 +56,7 @@ echo "source /usr/local/share/crumbs/crumbs-completion.bash" >> ~/.bashrc
 
 You can check the help dialog of the program or the man page for usage documentation and some examples:
 ```bash
-curmbs --help 
+crumbs --help 
 man crumbs
 
 ```
-
-
- 
-
