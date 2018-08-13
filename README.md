@@ -38,7 +38,7 @@ sudo make install
 
 ### Auto Completion
 
-An auto completion file for the bash shell is included and installed in `/usr/local/share/crumbs/crumbs-completion.bash`. Inm order to enable the completion it can e.g. be added to the user's `.bashrc` file:
+An auto completion file for the bash shell is included and installed in `/usr/local/share/crumbs/crumbs-completion.bash`. In order to enable the completion you can copy the file `crumbs-completion.bash` to e.g. `/usr/local/share/crumbs/` and source in your `.bashrc` file:
 ```bash
 echo "source /usr/local/share/crumbs/crumbs-completion.bash" >> ~/.bashrc
 
