@@ -6,6 +6,9 @@ struct crumb_config config;
 // data directory file descriptor
 int data_dir_fd;
 
+// boolean value to control output 
+bool verbose = false;
+
 int main(int argc, char **argv) {
     int opt;
     int opt_idx = 0;
@@ -14,17 +17,21 @@ int main(int argc, char **argv) {
 
     const struct option opts[] = {
         {"help", no_argument, 0, 'h'},
-        {"config", required_argument, 0, 'c'}
+        {"config", required_argument, 0, 'c'},
+        {"verbose", no_argument, 0, 'v'}
     };
 
     // parse the command line options
-    while((opt = getopt_long(argc, argv, "hc:", opts, &opt_idx)) > 0) {
+    while((opt = getopt_long(argc, argv, "vhc:", opts, &opt_idx)) > 0) {
         switch(opt) {
             case 'h':
                 show_help(argv[0]);
                 exit(EXIT_SUCCESS);
             case 'c':
                 config_path = optarg;
+                break;
+            case 'v':
+                verbose = true;
                 break;
             default:
                 exit(EXIT_FAILURE);
@@ -91,7 +98,8 @@ void init_data_dir(const char *path) {
     // make sure that the directory exists and can be accessed
     if (stat(path, &ds) == -1) {
         if (errno == ENOENT) {
-            printf("Initializing data directory %s\n", path);
+            if (verbose)
+                printf("Initializing data directory %s\n", path);
             if (mkdir(path, S_IRUSR | S_IWUSR | S_IXUSR) == -1) {
                 perror("Unable to create directory");
                 exit(EXIT_FAILURE);
@@ -223,7 +231,8 @@ int insert(const char *name, const char *cmd) {
     fprintf(fp, "%s", cmd);
     free(abs_path);
 
-    printf("Successfully added the crumb %s\n", name);
+    if (verbose)
+        printf("Successfully added the crumb %s\n", name);
     return 0;
 }
 
@@ -275,7 +284,8 @@ void create_dir(const char *prefix, const char *name) {
 
     struct stat ds;
 
-    printf("Checking path %s\n", path);
+    if(verbose)
+        printf("Checking path %s\n", path);
 
     // try to create the directory at the given path
     if (fstatat(data_dir_fd, path, &ds, 0) == -1) {
@@ -335,7 +345,8 @@ int exec(const char *name) {
 
     // read the command and execute it on the system
     char *cmd = read_command(name);
-    printf("Executing %s\n", cmd);
+    if(verbose)
+        printf("Executing %s\n", cmd);
     int ret = system(cmd);
     return ret;
 }
@@ -467,7 +478,8 @@ int delete_file(char **path_segments, char *file) {
         if (remove(path) < 0) {
             break;
         }
-        printf("Deleting %s\n", path);
+        if(verbose)
+            printf("Deleting %s\n", path);
         char *separator = strrchr(path, '/');
         *separator = '\0';
     }
@@ -518,4 +530,5 @@ void show_help(char *progr_name) {
     printf("\nOptions:\n");
     printf("\t-h/--help\t\t\tShow this help dialog and exit\n");
     printf("\t-c/--config <config-file>\tUse a different configuration file\n");
+    printf("\t-v/--verbose\t\t\tPrint additional information. Useful for debugging\n");
 }

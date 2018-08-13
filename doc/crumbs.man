@@ -12,7 +12,11 @@ crumbs [options] <action> <args>
 crumbs is a bookmarking system for shell commands, that allows a user to store commands under a given name in a file system hierarchy. Each crumb is stored in a dedicated file. If the name contains forward slashes i.e. '/', each character sequence before a slash is interpreted as a directory name.
 
 .SH OPTIONS
-\-h/\--help    Show the usage dialog and exit
+\-h/\--help                    Show the usage dialog and exit
+.br
+\-c/\--config <config-file>    Use a different config file
+.br
+\-v/\--verbose                 Print additional information. Useful for debugging
 
 .SH ACTIONS
 list                       List the stored crumbs
