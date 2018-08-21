@@ -1,4 +1,5 @@
 bin_PROGRAMS=crumbs
 crumbs_SOURCES=crumbs.c
 man1_MANS=doc/crumbs.man
-sysconf_DATA=crumbs.conf
+crumbsconfdir=/etc
+crumbsconf_DATA=crumbs.conf
