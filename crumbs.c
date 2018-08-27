@@ -334,6 +334,10 @@ char * read_command(const char *name) {
     }
     fseek(fp, 0, SEEK_END);
     int num_bytes = ftell(fp);
+    if (num_bytes <= 0) {
+        fprintf(stderr, "ERROR: Unable to determine data length from cumbs file\n");
+        exit(EXIT_FAILURE);
+    }
     fseek(fp, 0, SEEK_SET);
     char *cmd = malloc(num_bytes + 1);
     memset(cmd, 0, num_bytes);
