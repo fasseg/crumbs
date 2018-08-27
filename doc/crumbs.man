@@ -29,6 +29,8 @@ show <name>                Show a stored crumb
 .br
 exec <name>                Execute a crumb
 .br
+edit <name>                Edit a crumb
+.br
 delete                     Delete a crumb
 
 .SH EXAMPLES

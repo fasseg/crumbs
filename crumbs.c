@@ -89,6 +89,12 @@ int main(int argc, char **argv) {
             exit(EXIT_FAILURE);
         }
         delete_crumb(argv[optind + 1]);
+    } else if (strcmp(argv[optind], "edit") == 0) {
+        if (argc != optind + 2) {
+            fprintf(stderr, "ERROR: Invalid number of arguments for edit\n");
+            exit(EXIT_FAILURE);
+        }
+        edit(argv[optind + 1]);
     } else {
         fprintf(stderr, "ERROR: Invalid action '%s'\n", argv[optind]);
         exit(EXIT_FAILURE);
@@ -302,6 +308,42 @@ void create_dir(const char *prefix, const char *name) {
         }
     }
     free(path);
+}
+
+void edit(const char *name) {
+
+    check_name(name);
+
+    if (crumb_exists(name) != CRUMBEXISTS) {
+        fprintf(stderr, "ERROR: The crumb %s dows not exist\n", name);
+        exit(EXIT_FAILURE);
+    }
+
+    // edit the crumb using the standard editor
+    char *editor = getenv("EDITOR");
+    if (editor == NULL) {
+        fprintf(stderr, "ERROR: Unable to determine standard editor. Please make sure that the EDITOR environment variable is set\n");
+        exit(EXIT_FAILURE);
+    }
+
+    char *path = path_for_name(name);
+    size_t len_cmd = strlen(path) + strlen(editor) + 2;
+    char *cmd = malloc(len_cmd + 1);
+    snprintf(cmd, len_cmd, "%s %s", editor, path);
+    int ret = system(cmd);
+    if (ret != 0) {
+        fprintf(stderr, "ERROR: Command was not successfully executed\n");
+        exit(EXIT_FAILURE);
+    }
+    free(cmd);
+    free(path);
+}
+
+char *path_for_name(const char *name) {
+    int len_path = strlen(config.path) + strlen(name) + 2;
+    char *path = malloc(len_path);
+    snprintf(path, len_path, "%s/%s", config.path, name);
+    return path;
 }
 
 void view(const char *name) {
@@ -534,6 +576,7 @@ void show_help(char *progr_name) {
     printf("\tinsert-exec <name> <cmdline>\tExecute and add a new crumb\n");
     printf("\tshow <name>\t\t\tShow a crumb\n");
     printf("\texec <name>\t\t\tExecute a crumb\n");
+    printf("\tedit <name>\t\t\tEdit a crumb\n");
     printf("\tdelete <name>\t\t\tDelete a crumb\n");
     printf("\nOptions:\n");
     printf("\t-h/--help\t\t\tShow this help dialog and exit\n");

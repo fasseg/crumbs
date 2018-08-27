@@ -56,3 +56,7 @@ void delete_crumb(const char *name);
 int delete_file(char **path_segments, char *file);
 
 void check_name(const char *name);
+
+void edit(const char *name);
+
+char *path_for_name(const char *name);
