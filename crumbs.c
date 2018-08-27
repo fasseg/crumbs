@@ -340,7 +340,7 @@ char * read_command(const char *name) {
     }
     fseek(fp, 0, SEEK_SET);
     char *cmd = malloc(num_bytes + 1);
-    memset(cmd, 0, num_bytes);
+    memset(cmd, 0, num_bytes + 1);
 
     // read the command from the file into a variable
     fread(cmd, sizeof(char), num_bytes, fp);
