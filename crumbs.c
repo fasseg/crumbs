@@ -364,9 +364,7 @@ void view(const char *name) {
 char * read_command(const char *name) {
 
     // create the path of the crumb file to read the command from
-    int len_path = strlen(config.path) + strlen(name) + 2;
-    char *path = malloc(len_path);
-    snprintf(path, len_path, "%s/%s", config.path, name);
+    char *path = path_for_name(name);
 
     // open the file for reading
     FILE *fp = fopen(path, "r");
@@ -386,6 +384,8 @@ char * read_command(const char *name) {
 
     // read the command from the file into a variable
     fread(cmd, sizeof(char), num_bytes, fp);
+
+    free(path);
     return cmd;
 }
 
