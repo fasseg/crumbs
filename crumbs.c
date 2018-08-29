@@ -274,9 +274,8 @@ void create_dirs(const int len, const char **dirs) {
     for (int i = 0; i < len; i++) {
         const char *name = *(dirs + i);
         create_dir(prefix, name);
-        size_t len_prefix = strlen(prefix) + strlen(name) + 2;
-        prefix = realloc(prefix, len_prefix);
-        snprintf(prefix, len_prefix, "%s%s/", prefix, name);
+        prefix = realloc(prefix, strlen(prefix) + strlen(name) + 2);
+        snprintf(prefix + strlen(prefix), strlen(name) + 2, "%s/", name);
     }    
     free(prefix);
 }
