@@ -4,8 +4,8 @@
 AC_PREREQ([2.53])
 AC_INIT([crumbs], [0.0.1], [frank.asseg@objecthunter.net])
 
-# Set the defualt sysconf dir if it is not explicitly set by the user
-test "$sysconfdir" = '${prefix}/etc' && sysconfdir=/etc
+# Set the default sysconf dir if it is not explicitly set by the user
+test "$prefix" = NONE && test "$sysconfdir" = '${prefix}/etc' && sysconfdir='/etc'
 
 AC_CONFIG_SRCDIR([crumbs.h])
 AM_INIT_AUTOMAKE
