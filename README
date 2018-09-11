@@ -29,7 +29,7 @@ git clone https://github.com/fasseg/crumbs.git
 2. Run the configure script
 ```bash
 cd crumbs
-./configure --sysconfdir=/etc
+./configure
 ```
 3. Compile the program
 ```bash
