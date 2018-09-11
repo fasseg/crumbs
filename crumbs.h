@@ -21,7 +21,7 @@
 #define CRUMBEXISTS -1
 #define EDIREXISTS -2
 
-#define DEFAULT_CONFIG SYSCONFDIR "/crumbs.conf"
+#define DEFAULT_CONFIG "/etc/crumbs.conf"
 
 struct crumb_config {
     char *path;
