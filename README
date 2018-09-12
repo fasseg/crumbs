@@ -12,6 +12,10 @@ Aliases do not allow a user to use foward slashes in the alias name in order to 
 
 ## Installation
 
+### Arch Linmux AUR package
+
+For installing crumbs on Arch Linux an AUR package is provided at: https://aur.archlinux.org/packages/crumbs/
+
 ### Prerequisites
 
 In order to compile and install crumbs on your local system you the following software must be available on the system:
