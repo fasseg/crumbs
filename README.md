@@ -12,6 +12,12 @@ Aliases do not allow a user to use foward slashes in the alias name in order to 
 
 ## Installation
 
+### Arch Linux AUR package
+
+For installing crumbs on Arch Linux an AUR package is provided at: https://aur.archlinux.org/packages/crumbs/
+
+### Build from source
+
 1. Checkout the sources from github:
 ```bash
 git clone https://github.com/fasseg/crumbs.git
