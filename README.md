@@ -1,6 +1,6 @@
 # Crumbs
 
-Crumbs is a command line utility for the shell, for storing commands under a meaningful name in a hierarchy
+Crumbs is a command-line utility for the shell, for storing commands under a meaningful name in a hierarchy
 
 ## Motivation
 
@@ -15,6 +15,14 @@ Aliases do not allow a user to use foward slashes in the alias name in order to 
 ### Arch Linux AUR package
 
 For installing crumbs on Arch Linux an AUR package is provided at: https://aur.archlinux.org/packages/crumbs/
+
+### macOS Homebrew Formula
+
+On macOS you can install crumbs with [Homebrew](https://brew.sh) like this:
+
+```shell
+$ brew install mhubig/crumbs/crumbs
+```
 
 ### Prerequisites
 
