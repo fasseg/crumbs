@@ -1,14 +1,25 @@
 #!/bin/bash
 
-_crumbs_completion() {
-    local path=$(cat /etc/crumbs.conf | grep path= | cut -d '=' -f 2)
-    if [[ $path != "/"* ]];then
-        path="$HOME/$path"
+if [[ $OSTYPE == darwin* ]]; then
+    FIND_CMD=gfind
+else
+    FIND_CMD=find
+fi
+
+if [[ -f '/etc/crumbs.conf' ]]; then
+    DATA_PATH=$(cat /etc/crumbs.conf | grep path= | cut -d '=' -f 2)
+    
+    if [[ $DATA_PATH != "/"* ]]; then
+        DATA_PATH="$HOME/$path"
     fi
+else
+    DATA_PATH="$HOME/.crumbs"
+fi
 
-    local actions=("list" "insert" "insert-exec" "show" "exec" "delete")
+_crumbs_completion() {
     local cur="${COMP_WORDS[COMP_CWORD]}"
-
+    local actions=("list" "insert" "insert-exec" "show" "exec" "delete")
+    
     COMPREPLY=()
 
     if [[ $COMP_CWORD -eq 1 ]]; then
@@ -27,9 +38,9 @@ _crumbs_completion() {
         local prev=${COMP_WORDS[COMP_CWORD - 1]}
         if [[ $prev =~ ^(show|exec|delete)$ ]];then
             if [[ -z $cur ]];then
-                COMPREPLY+=( $(find $path -type f -printf "%P\n") )
+                COMPREPLY+=( $($FIND_CMD $DATA_PATH -type f -printf "%P\n") )
             else
-                COMPREPLY+=( $(find $path -type f -printf "%P\n" | grep "^$cur") )
+                COMPREPLY+=( $($FIND_CMD $DATA_PATH -type f -printf "%P\n" | grep "^$cur") )
             fi
         fi
     fi
