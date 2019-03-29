@@ -11,7 +11,7 @@
 #include <stdbool.h>
 
 #define PROGRAM_NAME "Crumbs"
-#define PROGRAM_VERSION "0.0.1"
+#define PROGRAM_VERSION "0.0.2"
 
 #define ACTION_INSERT 0
 #define ACTION_INSERT_EXEC 1
