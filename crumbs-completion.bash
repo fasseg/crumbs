@@ -18,7 +18,7 @@ fi
 
 _crumbs_completion() {
     local cur="${COMP_WORDS[COMP_CWORD]}"
-    local actions=("list" "insert" "insert-exec" "show" "exec" "delete")
+    local actions=("list" "insert" "insert-exec" "show" "exec" "delete" "edit")
     
     COMPREPLY=()
 
@@ -36,7 +36,7 @@ _crumbs_completion() {
 
     if [[ $COMP_CWORD -eq 2 ]]; then
         local prev=${COMP_WORDS[COMP_CWORD - 1]}
-        if [[ $prev =~ ^(show|exec|delete)$ ]];then
+        if [[ $prev =~ ^(show|exec|delete|edit)$ ]];then
             if [[ -z $cur ]];then
                 COMPREPLY+=( $($FIND_CMD $DATA_PATH -type f -printf "%P\n") )
             else
