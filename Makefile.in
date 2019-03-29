@@ -87,6 +87,8 @@ POST_INSTALL = :
 NORMAL_UNINSTALL = :
 PRE_UNINSTALL = :
 POST_UNINSTALL = :
+build_triplet = @build@
+host_triplet = @host@
 bin_PROGRAMS = crumbs$(EXEEXT)
 subdir = .
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
@@ -102,7 +104,7 @@ CONFIG_HEADER = config.h
 CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)" "$(DESTDIR)$(man1dir)" \
-	"$(DESTDIR)$(sysconfdir)"
+	"$(DESTDIR)$(data_sharedir)" "$(DESTDIR)$(sysconfdir)"
 PROGRAMS = $(bin_PROGRAMS)
 am_crumbs_OBJECTS = crumbs.$(OBJEXT)
 crumbs_OBJECTS = $(am_crumbs_OBJECTS)
@@ -173,7 +175,7 @@ am__uninstall_files_from_dir = { \
 man1dir = $(mandir)/man1
 NROFF = nroff
 MANS = $(man1_MANS)
-DATA = $(sysconf_DATA)
+DATA = $(data_share_DATA) $(sysconf_DATA)
 am__tagged_files = $(HEADERS) $(SOURCES) $(TAGS_FILES) \
 	$(LISP)config.h.in
 # Read a list of newline-separated strings from the standard input,
@@ -197,8 +199,8 @@ CTAGS = ctags
 CSCOPE = cscope
 AM_RECURSIVE_TARGETS = cscope
 am__DIST_COMMON = $(srcdir)/Makefile.in $(srcdir)/config.h.in AUTHORS \
-	COPYING ChangeLog INSTALL NEWS README compile depcomp \
-	install-sh missing
+	COPYING ChangeLog INSTALL NEWS README compile config.guess \
+	config.sub depcomp install-sh missing
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 distdir = $(PACKAGE)-$(VERSION)
 top_distdir = $(distdir)
@@ -272,14 +274,22 @@ am__quote = @am__quote@
 am__tar = @am__tar@
 am__untar = @am__untar@
 bindir = @bindir@
+build = @build@
 build_alias = @build_alias@
+build_cpu = @build_cpu@
+build_os = @build_os@
+build_vendor = @build_vendor@
 builddir = @builddir@
 datadir = @datadir@
 datarootdir = @datarootdir@
 docdir = @docdir@
 dvidir = @dvidir@
 exec_prefix = @exec_prefix@
+host = @host@
 host_alias = @host_alias@
+host_cpu = @host_cpu@
+host_os = @host_os@
+host_vendor = @host_vendor@
 htmldir = @htmldir@
 includedir = @includedir@
 infodir = @infodir@
@@ -307,6 +317,8 @@ crumbs_SOURCES = crumbs.c
 man1_MANS = doc/crumbs.man
 sysconf_DATA = crumbs.conf
 AM_CPPFLAGS = -DSYSCONFDIR="\"$(sysconfdir)\""
+@OS_LINUX_TRUE@data_sharedir = $(prefix)/share/crumbs
+@OS_LINUX_TRUE@data_share_DATA = crumbs-completion.bash
 all: config.h
 	$(MAKE) $(AM_MAKEFLAGS) all-am
 
@@ -475,6 +487,27 @@ uninstall-man1:
 	} | sed -e 's,.*/,,;h;s,.*\.,,;s,^[^1][0-9a-z]*$$,1,;x' \
 	      -e 's,\.[0-9a-z]*$$,,;$(transform);G;s,\n,.,'`; \
 	dir='$(DESTDIR)$(man1dir)'; $(am__uninstall_files_from_dir)
+install-data_shareDATA: $(data_share_DATA)
+	@$(NORMAL_INSTALL)
+	@list='$(data_share_DATA)'; test -n "$(data_sharedir)" || list=; \
+	if test -n "$$list"; then \
+	  echo " $(MKDIR_P) '$(DESTDIR)$(data_sharedir)'"; \
+	  $(MKDIR_P) "$(DESTDIR)$(data_sharedir)" || exit 1; \
+	fi; \
+	for p in $$list; do \
+	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
+	  echo "$$d$$p"; \
+	done | $(am__base_list) | \
+	while read files; do \
+	  echo " $(INSTALL_DATA) $$files '$(DESTDIR)$(data_sharedir)'"; \
+	  $(INSTALL_DATA) $$files "$(DESTDIR)$(data_sharedir)" || exit $$?; \
+	done
+
+uninstall-data_shareDATA:
+	@$(NORMAL_UNINSTALL)
+	@list='$(data_share_DATA)'; test -n "$(data_sharedir)" || list=; \
+	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
+	dir='$(DESTDIR)$(data_sharedir)'; $(am__uninstall_files_from_dir)
 install-sysconfDATA: $(sysconf_DATA)
 	@$(NORMAL_INSTALL)
 	@list='$(sysconf_DATA)'; test -n "$(sysconfdir)" || list=; \
@@ -726,7 +759,7 @@ check-am: all-am
 check: check-am
 all-am: Makefile $(PROGRAMS) $(MANS) $(DATA) config.h
 installdirs:
-	for dir in "$(DESTDIR)$(bindir)" "$(DESTDIR)$(man1dir)" "$(DESTDIR)$(sysconfdir)"; do \
+	for dir in "$(DESTDIR)$(bindir)" "$(DESTDIR)$(man1dir)" "$(DESTDIR)$(data_sharedir)" "$(DESTDIR)$(sysconfdir)"; do \
 	  test -z "$$dir" || $(MKDIR_P) "$$dir"; \
 	done
 install: install-am
@@ -782,7 +815,7 @@ info: info-am
 
 info-am:
 
-install-data-am: install-man
+install-data-am: install-data_shareDATA install-man
 
 install-dvi: install-dvi-am
 
@@ -829,8 +862,8 @@ ps: ps-am
 
 ps-am:
 
-uninstall-am: uninstall-binPROGRAMS uninstall-man \
-	uninstall-sysconfDATA
+uninstall-am: uninstall-binPROGRAMS uninstall-data_shareDATA \
+	uninstall-man uninstall-sysconfDATA
 
 uninstall-man: uninstall-man1
 
@@ -844,14 +877,15 @@ uninstall-man: uninstall-man1
 	distclean-hdr distclean-tags distcleancheck distdir \
 	distuninstallcheck dvi dvi-am html html-am info info-am \
 	install install-am install-binPROGRAMS install-data \
-	install-data-am install-dvi install-dvi-am install-exec \
-	install-exec-am install-html install-html-am install-info \
-	install-info-am install-man install-man1 install-pdf \
-	install-pdf-am install-ps install-ps-am install-strip \
-	install-sysconfDATA installcheck installcheck-am installdirs \
-	maintainer-clean maintainer-clean-generic mostlyclean \
-	mostlyclean-compile mostlyclean-generic pdf pdf-am ps ps-am \
-	tags tags-am uninstall uninstall-am uninstall-binPROGRAMS \
+	install-data-am install-data_shareDATA install-dvi \
+	install-dvi-am install-exec install-exec-am install-html \
+	install-html-am install-info install-info-am install-man \
+	install-man1 install-pdf install-pdf-am install-ps \
+	install-ps-am install-strip install-sysconfDATA installcheck \
+	installcheck-am installdirs maintainer-clean \
+	maintainer-clean-generic mostlyclean mostlyclean-compile \
+	mostlyclean-generic pdf pdf-am ps ps-am tags tags-am uninstall \
+	uninstall-am uninstall-binPROGRAMS uninstall-data_shareDATA \
 	uninstall-man uninstall-man1 uninstall-sysconfDATA
 
 .PRECIOUS: Makefile

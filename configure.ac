@@ -26,5 +26,21 @@ AC_FUNC_MALLOC
 AC_FUNC_REALLOC
 AC_CHECK_FUNCS([memset mkdir strrchr strstr])
 
+# Check the current host os
+AC_CANONICAL_HOST
+
+case $host_os in
+  darwin* )
+        OS_DARWIN=yes 
+        ;;
+  linux*)
+        OS_LINUX=yes
+        ;;
+    *)
+        AC_MSG_ERROR([Your platform is not currently supported])
+        ;;
+esac
+AM_CONDITIONAL([OS_LINUX], [test "$OS_LINUX" = "yes"])
+
 AC_CONFIG_FILES([Makefile])
 AC_OUTPUT
