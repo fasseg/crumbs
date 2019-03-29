@@ -4,6 +4,7 @@ config.log
 config.status
 .deps
 Makefile
+Makefile.in
 autom4te.cache/
 config.h.in~
 tags
