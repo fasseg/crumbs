@@ -10,7 +10,7 @@ if [[ -f '/etc/crumbs.conf' ]]; then
     DATA_PATH=$(cat /etc/crumbs.conf | grep path= | cut -d '=' -f 2)
     
     if [[ $DATA_PATH != "/"* ]]; then
-        DATA_PATH="$HOME/$path"
+        DATA_PATH="$HOME/$DATA_PATH"
     fi
 else
     DATA_PATH="$HOME/.crumbs"
