@@ -6,7 +6,7 @@ Crumbs is a command-line utility for the shell, for storing commands under a mea
 
 For web service tests I am used to sending a lot of HTTP Requests via `curl`. The command line invocation can be quite complex and long and I wanted to be able to organize them in a directory like structure. Also I wanted to have a context sensitive auto completion for the different command invocations.
 
-## Why not us aliases?
+## Why not use aliases?
 
 Aliases do not allow a user to use foward slashes in the alias name in order to create complex hierarchies and therefore no context sensitive auto completion.
 
