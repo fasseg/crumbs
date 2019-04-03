@@ -38,7 +38,7 @@ _crumbs_completion() {
         local prev=${COMP_WORDS[COMP_CWORD - 1]}
         if [[ $prev =~ ^(show|exec|delete|edit)$ ]];then
             if [[ -z $cur ]];then
-                COMPREPLY+=( $($FIND_CMD $DATA_PATH -type f -printf "%P\n") )
+                COMPREPLY+=( $($FIND_CMD $DATA_PATH -type f -printf "%P\n" | grep -v "^\.") )
             else
                 COMPREPLY+=( $($FIND_CMD $DATA_PATH -type f -printf "%P\n" | grep "^$cur") )
             fi
