@@ -8,3 +8,5 @@ Makefile.in
 autom4te.cache/
 config.h.in~
 tags
+config.sub
+config.guess

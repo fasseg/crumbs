@@ -39,10 +39,10 @@ In order to compile and install crumbs on your local system you the following so
 git clone https://github.com/fasseg/crumbs.git
 ```
 
-2. Run the configure script and optional specify the installation path with `--prefix` and the path
-   for the config file with `--sysconfdir`.
+2. Run automake to create required files and the configure script. Optionally specify the installation path with `--prefix` and the path for the config file with `--sysconfdir`.
 ```bash
 cd crumbs
+automake --add-missing
 ./configure --prefix='/usr/local' --sysconfdir='/etc'
 ```
 
